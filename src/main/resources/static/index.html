@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 工单工作台</title>
+<style>
+:root{font-family:system-ui,"Microsoft YaHei",sans-serif;color:#17233d;background:#f4f6fb}
+*{box-sizing:border-box}body{margin:0}header{background:#18243d;color:white;padding:28px max(5vw,20px)}
+h1{font-size:26px;margin:0 0 8px}header p{color:#bac7e1;margin:0}main{max-width:1100px;margin:28px auto;padding:0 20px;display:grid;grid-template-columns:320px 1fr;gap:24px}
+section{background:white;border:1px solid #dce2ee;border-radius:12px;padding:24px}h2{font-size:19px;margin:0 0 20px}
+label{display:block;margin:14px 0 6px;font-size:14px}input,textarea{width:100%;font:inherit;padding:10px;border:1px solid #bac7da;border-radius:6px}textarea{height:150px;resize:vertical}
+button{cursor:pointer;font:inherit;border:0;border-radius:6px;padding:9px 14px;background:#2859c5;color:white;margin:8px 6px 0 0}button:disabled{opacity:.5;cursor:wait}
+.ticket{padding:18px 0;border-bottom:1px solid #e5eaf3}.ticket h3{font-size:16px;margin:0 0 8px}.meta{color:#5c6d88;font-size:13px}.desc{white-space:pre-wrap;overflow-wrap:anywhere}.hint{font-size:13px;color:#687792;line-height:1.6}
+#message{grid-column:1/-1;white-space:pre-wrap;color:#8c2c27}dialog{max-width:650px;border:1px solid #bac7da;border-radius:12px;padding:26px}dialog p{white-space:pre-wrap;line-height:1.7}dialog::backdrop{background:#17233d66}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+</style>
+<header><h1>AI 工单工作台</h1><p>记录故障 · 跟踪处理 · 辅助排查</p></header>
+<main><div id="message" role="status" aria-live="polite"></div><section><h2>新建工单</h2>
+<form id="form"><label for="title">标题</label><input id="title" maxlength="120" required placeholder="如：商品查询接口超时">
+<label for="description">故障描述</label><textarea id="description" maxlength="4000" required placeholder="填写复现步骤、现象与错误码"></textarea>
+<button id="submit">创建工单</button></form><p class="hint">演示环境，请勿录入真实敏感数据。排查建议需要人工核对。</p></section>
+<section><h2>工单列表 <span id="count" class="meta"></span></h2><div id="list"></div>
+<button id="prev">上一页</button><button id="next">下一页</button><span id="page" class="meta"></span></section></main>
+<dialog id="dialog"><h2>排查建议</h2><div id="mode" class="meta"></div><p id="advice"></p><button id="close">关闭</button></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);let page=1,total=0;
+async function api(path,options={}){const r=await fetch('/api'+path,{headers:{'Content-Type':'application/json'},...options});const data=await r.json();if(!r.ok)throw Error(data.error||'请求失败');return data}
+function report(e){$('message').textContent=e.message}
+async function busy(button,fn){button.disabled=true;try{await fn()}catch(e){report(e)}finally{button.disabled=false}}
+function button(text,fn){const b=document.createElement('button');b.textContent=text;b.onclick=()=>busy(b,fn);return b}
+async function load(){const r=await api('/tickets?page='+page+'&size=5');total=r.total;$('count').textContent='共 '+total+' 条';$('page').textContent='第 '+page+' 页';$('list').replaceChildren();
+for(const t of r.items){const row=document.createElement('article');row.className='ticket';const h=document.createElement('h3');h.textContent='#'+t.id+' '+t.title;const meta=document.createElement('div');meta.className='meta';meta.textContent=t.category+' · '+t.status+' · v'+t.version;const desc=document.createElement('p');desc.className='desc';desc.textContent=t.description;row.append(h,meta,desc);
+row.append(button('排查建议',async()=>{const r=await api('/tickets/'+t.id+'/suggestion',{method:'POST'});$('mode').textContent=r.mode==='demo-rule'?'规则演示建议':'模型生成建议';$('advice').textContent=r.suggestion;$('dialog').showModal()}));
+if(t.status!=='RESOLVED')row.append(button(t.status==='OPEN'?'开始处理':'标为已解决',async()=>{await api('/tickets/'+t.id+'/status',{method:'PATCH',body:JSON.stringify({status:t.status==='OPEN'?'IN_PROGRESS':'RESOLVED',version:t.version})});await load()}));$('list').append(row)}
+if(!r.items.length)$('list').textContent='暂无工单';$('prev').disabled=page===1;$('next').disabled=page*5>=total}
+$('form').onsubmit=e=>{e.preventDefault();busy($('submit'),async()=>{await api('/tickets',{method:'POST',body:JSON.stringify({title:$('title').value,description:$('description').value})});$('form').reset();$('message').textContent='工单已创建';page=1;await load()})};
+$('prev').onclick=()=>{if(page>1){page--;load().catch(report)}};$('next').onclick=()=>{if(page*5<total){page++;load().catch(report)}};$('close').onclick=()=>$('dialog').close();load().catch(report);
+</script></html>
