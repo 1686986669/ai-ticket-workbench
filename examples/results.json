@@ -1,0 +1,96 @@
+{
+  "data_origin": "synthetic test tickets; actual HTTP server with real H2 and MyBatis",
+  "mode": "demo-rule; no live model request",
+  "passed": 5,
+  "total": 5,
+  "cases": [
+    {
+      "id": "JAVA-01",
+      "title": "商城慢查询工单，从创建到解决的完整闭环",
+      "passed": true,
+      "evidence": {
+        "ticket_id": 1,
+        "states": [
+          "OPEN",
+          "IN_PROGRESS",
+          "RESOLVED"
+        ],
+        "versions": [
+          0,
+          1,
+          2
+        ],
+        "http_statuses": [
+          200,
+          200
+        ],
+        "suggestion": {
+          "mode": "demo-rule",
+          "suggestion": "使用 EXPLAIN 检查索引、扫描行数和长事务。"
+        }
+      }
+    },
+    {
+      "id": "JAVA-02",
+      "title": "两个客户端持相同 version 同时接单，仅一方成功",
+      "passed": true,
+      "evidence": {
+        "ticket_id": 2,
+        "two_client_statuses": [
+          200,
+          409
+        ],
+        "stored_status": "IN_PROGRESS",
+        "stored_version": 1
+      }
+    },
+    {
+      "id": "JAVA-03",
+      "title": "跳过处理中直接结单被拒绝，数据库状态保持不变",
+      "passed": true,
+      "evidence": {
+        "ticket_id": 3,
+        "skipped_transition_http": 409,
+        "error": {
+          "error": "Invalid status transition"
+        },
+        "stored_status": "OPEN"
+      }
+    },
+    {
+      "id": "JAVA-04",
+      "title": "多条工单分页，返回稳定倒序且两页无重复",
+      "passed": true,
+      "evidence": {
+        "page1_ids": [
+          9,
+          8,
+          7,
+          6,
+          5
+        ],
+        "page2_ids": [
+          4,
+          3,
+          2,
+          1
+        ],
+        "total": 9,
+        "stable_order": "id descending",
+        "overlap": []
+      }
+    },
+    {
+      "id": "JAVA-05",
+      "title": "非法请求被拒绝，SQL 特殊字符仅作为工单文本",
+      "passed": true,
+      "evidence": {
+        "blank_title_http": 400,
+        "oversize_page_http": 400,
+        "missing_ticket_http": 404,
+        "sql_text_saved": "[case-50eb5362c0] '; DROP TABLE tickets; --",
+        "table_still_queryable_http": 200
+      }
+    }
+  ]
+}

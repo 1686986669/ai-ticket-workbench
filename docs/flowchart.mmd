@@ -1,0 +1,14 @@
+flowchart TD
+  U[页面或 HTTP 请求] --> V{参数合法}
+  V -->|否| E[400 参数错误]
+  V -->|是| S[Service 分类与业务规则]
+  S --> M[MyBatis 参数绑定写入 H2]
+  M --> O[OPEN version 0]
+  O --> P[处理人提交目标状态与 version]
+  P --> C{合法跳转且版本一致}
+  C -->|否| X[409 冲突 原状态保留]
+  C -->|是| L[条件更新 状态前进 version 加 1]
+  L --> R[IN_PROGRESS 然后 RESOLVED]
+  O --> A[独立建议接口]
+  A --> D[默认规则建议]
+  A -. live 本轮未测 .-> G[后端模型 API]

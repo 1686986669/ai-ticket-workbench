@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1290" viewBox="0 0 1200 1290" role="img"><title>Java AI 工单工作台</title><desc>实测路径：真实 HTTP → Spring Boot → MyBatis → H2；规则建议</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#586b87"/></marker></defs>
+<rect width="1200" height="1290" fill="#f5f7fb"/>
+<text x="60" y="76" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="34" text-anchor="start">Java AI 工单工作台</text>
+<text x="60" y="120" fill="#586b87" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">实测路径：真实 HTTP → Spring Boot → MyBatis → H2；规则建议</text>
+<rect x="100" y="160" width="620" height="82" rx="14" fill="#eaf0ff" stroke="#a9badc" stroke-width="2"/>
+<text x="410.0" y="208.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">页面 / HTTP 提交工单</text>
+<rect x="100" y="290" width="620" height="90" rx="14" fill="#eaf0ff" stroke="#a9badc" stroke-width="2"/>
+<text x="410.0" y="342.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">Controller 校验标题、描述与分页参数</text>
+<polyline points="410,242 410,290" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="795" y="290" width="340" height="90" rx="14" fill="#fff1df" stroke="#d7ba91" stroke-width="2"/>
+<text x="965.0" y="325.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">非法参数返回 400</text>
+<text x="965.0" y="359.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">不进入业务写入</text>
+<polyline points="720,335 795,335" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="720" y="317" fill="#586b87" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">失败</text>
+<rect x="100" y="450" width="620" height="90" rx="14" fill="#eaf0ff" stroke="#a9badc" stroke-width="2"/>
+<text x="410.0" y="502.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">Service 分类 → MyBatis 参数绑定写入 H2</text>
+<polyline points="410,380 410,450" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="100" y="610" width="620" height="82" rx="14" fill="#e5f4ec" stroke="#a1cbb3" stroke-width="2"/>
+<text x="410.0" y="658.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">创建 OPEN 工单，version = 0</text>
+<polyline points="410,540 410,610" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="100" y="770" width="620" height="90" rx="14" fill="#eaf0ff" stroke="#a9badc" stroke-width="2"/>
+<text x="410.0" y="822.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">处理人提交目标状态 + 当前 version</text>
+<polyline points="410,692 410,770" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<polygon points="410.0,940 675,1000.0 410.0,1060 145,1000.0" fill="#eaf0ff" stroke="#a9badc" stroke-width="2"/>
+<text x="410.0" y="1007.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">合法跳转且 version 一致？</text>
+<polyline points="410,860 410,940" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="795" y="955" width="340" height="90" rx="14" fill="#fff1df" stroke="#d7ba91" stroke-width="2"/>
+<text x="965.0" y="990.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">返回 409 冲突</text>
+<text x="965.0" y="1024.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">保留数据库原状态</text>
+<polyline points="675,1000 795,1000" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="724" y="983" fill="#586b87" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">否</text>
+<rect x="100" y="1130" width="620" height="100" rx="14" fill="#e5f4ec" stroke="#a1cbb3" stroke-width="2"/>
+<text x="410.0" y="1170.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">IN_PROGRESS → RESOLVED</text>
+<text x="410.0" y="1204.0" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="24" text-anchor="middle">条件更新成功，version 每次加 1</text>
+<polyline points="410,1060 410,1130" fill="none" stroke="#586b87" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="430" y="1100" fill="#586b87" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">是</text>
+<text x="790" y="1155" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">建议接口：</text>
+<text x="790" y="1190" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">demo-rule 为规则建议</text>
+<text x="790" y="1225" fill="#18273f" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="20" text-anchor="start">live 模型本轮未验证</text>
+</svg>

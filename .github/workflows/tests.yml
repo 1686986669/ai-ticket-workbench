@@ -13,3 +13,25 @@ jobs:
           java-version: '17'
           cache: maven
       - run: mvn -B verify
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify real HTTP business cases
+        shell: bash
+        run: |
+          java -jar target/ai-ticket-workbench-1.0.0.jar --spring.datasource.url=jdbc:h2:mem:acceptance --server.port=8087 > /tmp/acceptance-app.log 2>&1 &
+          app_pid=$!
+          trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8087/api/health >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "1" ]; then
+            cat /tmp/acceptance-app.log
+            exit 1
+          fi
+          python examples/verify_cases.py --base-url http://127.0.0.1:8087

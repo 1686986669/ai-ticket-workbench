@@ -33,3 +33,13 @@ Docker 可选：`docker compose up --build`，仅绑定本机 8080，使用命�
 这是本地学习演示，没有登录、租户隔离、速率限制和生产审计。不要直接开放到公网或录入真实工单。分类是关键词规则，模型建议不会自动改变状态。真实调用会把工单标题与描述发给配置的模型服务并可能计费。Docker 路径和真实模型应在目标环境单独验证。
 
 详见 [接口与部署文档](docs/api-and-operations.md)。
+
+## 业务案例与流程图
+
+新增 5 个可复现验收案例，包含操作步骤、预期结果、实际输出和流程图。
+
+- [案例验收与流程图](docs/business-cases.md)
+- [原始运行结果](examples/results.json)
+- [可编辑流程图源文件](docs/flowchart.mmd)
+
+案例使用模拟业务数据，实际运行 CLI/SQLite 或 Java HTTP/H2，没有调用真实模型。GitHub Actions 会自动执行案例脚本。
